@@ -1,0 +1,4 @@
+nodeapp/node_modules/
+nodeapp/dist/
+.env
+.git
