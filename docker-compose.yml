@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # NGINX - Rever Proxy & Load Balancer
   proxy:
@@ -37,7 +35,7 @@ services:
       - basic-network
 
   database:
-    images: postgres:15-alpine
+    image: postgres:15-alpine
     container_name: database
     environment:
       - POSTGRES_USER=postgres
@@ -46,7 +44,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
       - basic-network
@@ -62,7 +60,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
+      - redis-data:/data
     restart: unless-stopped
     networks:
       - basic-network
@@ -73,13 +71,40 @@ services:
       timeout: 3s
       retries: 5
 
-  volumes:
-    postgres-data:
-      driver: local
-    redis-data:
-      driver: local
+  # replication-databse
+  # Used for making a read-only database: increases data integrity   
 
-  # Custom "simple" network
-  networks:
-    basic-network:
-      driver: bridge
+  # queue (Kafka | RabbitMQ | Dragonfly):
+  # could add a queue container as well for long process or other needs
+ 
+  # watcher:
+  # add a monitoring tool
+
+  # loki
+  # for logs
+
+  # watch-tower:
+  # docker monitoring tool
+
+  # secrets:
+  # for managing secrets, env, and keys
+
+  # grafana:
+  # monitoring gui
+
+  # prometheus:
+  # metrics monitoring
+
+  # PageDuty | Slack:
+  # Alert Manager (possibly)
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+
+# Custom "simple" network
+networks:
+  basic-network:
+    driver: bridge
