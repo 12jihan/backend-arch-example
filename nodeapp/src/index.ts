@@ -1,7 +1,7 @@
 import express from 'express';
 
 const app = express();
-const PORT = process.env.HOSTNAME || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -16,11 +16,11 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.get('/', (_req, _res) => {
-  _res.json({ message: `Hello World from port: ${PORT}` });
+  _res.json({ message: 'Hello from Docker!' });
 });
 
 app.get('/api', async (req, res) => {
-  res.json({ message: 'Hello from Docker!' });
+  res.json({ message: `Hello World from port: ${PORT} in ${process.env.HOSTNAME}` });
 });
 
 app.get('/api/db', async (req, res) => {
@@ -37,7 +37,7 @@ app.get('/api/cache', async (req, res) => {
 
 // server listening on $PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server ${process.env.HOSTNAME ? process.env.HOSTNAME : "is"} running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
   console.log(`Database: ${process.env.DATABASE_URL}`);
   console.log(`Redis: ${process.env.REDIS_URL}`);

@@ -1,14 +1,15 @@
 services:
-  # NGINX - Rever Proxy & Load Balancer
   proxy:
     image: nginx:alpine
     container_name: proxy 
     ports: 
       - "80:80"
-      - "443:443"
+      # For https traffic but uneeded right now
+      # - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
+      # If you need ssl sertification
+      # - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - api
     restart: unless-stopped
@@ -19,9 +20,16 @@ services:
     build:
       context: ./nodeapp
       dockerfile: Dockerfile
-    container_name: api
-    ports: 
-      - "3000:3000"
+    # Can't us container_name if using replicas
+    # container_name: api
+    # Use ports if it's just one, but if we're creating replicas then not neccessary
+    # ports: 
+    #   - "3000:3000"
+    # Use this when you want to scale and have several services running
+    deploy:
+      mode: replicated
+      replicas: 3 # Running 3 copies
+      # You can setup environment variables here:
     environment:
       - NODE_ENV=production
       - PORT=3000
