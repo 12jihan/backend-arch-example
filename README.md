@@ -13,7 +13,7 @@ A template for containerized Node.js applications. Comes with:
 - Docker Compose for orchestration
 - Horizontal scaling (3 replicas by default)
 
-## Visual Diagram (Excalibur)
+## Visual Diagram (Excalidraw)
 ![Diagram](./images/Backend-Architecture-Diagram.png)(https://excalidraw.com/#json=R3eT5g4VDLOs_rtnTqt9H,DMZJk-e_blmapSVUPWWYFA)
 
 ## Quick Start
