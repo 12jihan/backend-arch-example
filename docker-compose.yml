@@ -79,6 +79,37 @@ services:
       timeout: 3s
       retries: 5
 
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./prom-tail/promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+    networks:
+      - basic-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports: 
+      - "3000:3000"
+    networks:
+      - basic-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports: 
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - basic-network
+
   # replication-databse
   # Used for making a read-only database: increases data integrity   
 
@@ -88,25 +119,18 @@ services:
   # watcher:
   # add a monitoring tool
 
-  # loki
-  # for logs
-
   # watch-tower:
   # docker monitoring tool
 
   # secrets:
   # for managing secrets, env, and keys
 
-  # grafana:
-  # monitoring gui
-
-  # prometheus:
-  # metrics monitoring
-
   # PageDuty | Slack:
   # Alert Manager (possibly)
 
 volumes:
+  prometheus-data:
+    driver: local
   postgres-data:
     driver: local
   redis-data:
