@@ -110,25 +110,28 @@ services:
     networks:
       - basic-network
 
-  # replication-databse
-  # Used for making a read-only database: increases data integrity   
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: 
+      # UI Port:
+      - "15672:15672"
+      # App Port (for node.js):
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: rabbit
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  # queue (Kafka | RabbitMQ | Dragonfly):
-  # could add a queue container as well for long process or other needs
- 
-  # watcher:
-  # add a monitoring tool
-
-  # watch-tower:
-  # docker monitoring tool
-
-  # secrets:
-  # for managing secrets, env, and keys
-
-  # PageDuty | Slack:
-  # Alert Manager (possibly)
 
 volumes:
+  rabbitmq-data:
+    driver: local
   prometheus-data:
     driver: local
   postgres-data:
@@ -140,3 +143,17 @@ volumes:
 networks:
   basic-network:
     driver: bridge
+
+#INFO:
+# --
+# Replication-Databse
+# Used for making a read-only database: increases data integrity   
+# xxx
+# Watch-Tower:
+# Docker monitoring tool
+# xxx
+# Secrets:
+# For managing secrets, env, and keys
+# xxx
+# PageDuty | Slack:
+# Alert Manager (possibly)
