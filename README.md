@@ -118,7 +118,6 @@ Things that could be added:
 ## Notes
 
 - Database credentials are hardcoded for local dev. Use secrets in production.
-- The healthcheck timeout in docker-compose has a typo (`5d` should be `5s`)
 - SSL certs commented out but ready to enable
 
 ## License
