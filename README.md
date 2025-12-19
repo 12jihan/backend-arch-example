@@ -62,8 +62,8 @@ Environment variables in `docker-compose.yml`:
 environment:
   - NODE_ENV=production
   - PORT=3000
-  - DATABASE_URL=postgresql://postgres:postgres@database:5432/testdb
-  - REDIS_URL=redis://cache:6379
+  - DATABASE_URL=postgresql
+  - REDIS_URL=redis
 ```
 
 ## Scaling
