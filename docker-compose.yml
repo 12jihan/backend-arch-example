@@ -80,6 +80,7 @@ services:
 
   loki:
     image: grafana/loki:latest
+    restart: unless-stopped
     ports:
       - "3100:3100"
 
@@ -87,7 +88,7 @@ services:
     image: grafana/promtail:latest
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - ./prom-tail/promtail-config.yaml:/etc/promtail/config.yaml
+      - ./observability/promtail/promtail-config.yaml:/etc/promtail/config.yaml
     command: -config.file=/etc/promtail/config.yaml
     restart: unless-stopped
     networks:
@@ -98,6 +99,8 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=password
     networks:
       - basic-network
 
@@ -106,7 +109,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     restart: unless-stopped
     networks:
