@@ -29,6 +29,7 @@ services:
     deploy:
       mode: replicated
       replicas: 3 # Running 3 containers
+    
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -79,12 +80,17 @@ services:
       retries: 5
 
   loki:
+    container_name: loki
     image: grafana/loki:latest
     restart: unless-stopped
+    volumes:
+      - ./observability/loki/loki-config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100:3100"
 
   promtail:
+    container_name: promtail
     image: grafana/promtail:latest
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -95,6 +101,7 @@ services:
       - basic-network
 
   grafana:
+    container_name: grafana
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
@@ -106,6 +113,7 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
+    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -116,6 +124,7 @@ services:
       - basic-network
 
   rabbitmq:
+    container_name: rabbitmq
     image: rabbitmq:3-management
     ports:
       # UI Port:
