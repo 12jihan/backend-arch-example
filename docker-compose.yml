@@ -88,6 +88,8 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100:3100"
+    networks:
+      - basic-network
 
   promtail:
     container_name: promtail
@@ -132,6 +134,8 @@ services:
       # App Port (for node.js):
       - "5672:5672"
     restart: unless-stopped
+    network:
+      - basic-network
     environment:
       RABBITMQ_DEFAULT_USER: rabbit
       RABBITMQ_DEFAULT_PASS: rabbit
