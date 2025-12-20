@@ -29,7 +29,7 @@ services:
     deploy:
       mode: replicated
       replicas: 3 # Running 3 containers
-    
+
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -95,8 +95,9 @@ services:
     container_name: promtail
     image: grafana/promtail:latest
     volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./observability/promtail/promtail-config.yaml:/etc/promtail/config.yaml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
     command: -config.file=/etc/promtail/config.yaml
     restart: unless-stopped
     networks:
@@ -110,6 +111,8 @@ services:
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=password
+    volumes:
+      - grafana-data:/var/lib/grafana
     networks:
       - basic-network
 
@@ -134,8 +137,8 @@ services:
       # App Port (for node.js):
       - "5672:5672"
     restart: unless-stopped
-    network:
-      - basic-network
+    # network:
+    #   - basic-network
     environment:
       RABBITMQ_DEFAULT_USER: rabbit
       RABBITMQ_DEFAULT_PASS: rabbit
@@ -151,6 +154,8 @@ volumes:
   rabbitmq-data:
     driver: local
   prometheus-data:
+    driver: local
+  grafana-data:
     driver: local
   postgres-data:
     driver: local
