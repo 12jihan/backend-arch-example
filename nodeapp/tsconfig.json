@@ -5,8 +5,10 @@
     "rootDir": "./src",
     "outDir": "./dist",
     // Environment Settings
-    "module": "es2022",
-    "target": "esnext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "target": "es2022",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],

@@ -1,6 +1,5 @@
 import express from 'express';
-import { collectDefaultMetrics, register } from '../node_modules/prom-client/index';
-
+import { collectDefaultMetrics, register } from 'prom-client';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -27,7 +26,7 @@ app.get('/', (_req, _res) => {
 app.get('/metrics', async (req, res) => {
   try {
     res.set('Content-Type', register.contentType);
-    res.json(await register.metrics());
+    res.send(await register.metrics());
   } catch (ex) {
     res.status(500).end(ex)
   }
