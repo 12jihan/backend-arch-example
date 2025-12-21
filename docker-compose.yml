@@ -11,17 +11,17 @@ services:
       # If you need ssl sertification
       # - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
-      - api
+      - backend
     restart: unless-stopped
     networks:
       - basic-network
 
-  api:
+  backend:
     build:
       context: ./nodeapp
       dockerfile: Dockerfile
     # Can't us container_name if using replicas
-    # container_name: api
+    # container_name: backend
     # Use ports if it's just one, but if we're creating replicas then not neccessary
     # ports:
     #   - "3000:3000"

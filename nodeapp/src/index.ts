@@ -1,9 +1,13 @@
 import express from 'express';
+import { collectDefaultMetrics, register } from '../node_modules/prom-client/index';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+collectDefaultMetrics()
+// const collectDefailtMetrics = client.collectDefailtMetrics;
+// collectDefaultMetrics({ register: client.register })
 
 // Health check
 app.get('/health', (req, res) => {
@@ -17,6 +21,16 @@ app.get('/health', (req, res) => {
 // API routes
 app.get('/', (_req, _res) => {
   _res.json({ message: 'Hello from Docker!' });
+});
+
+// API routes
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', register.contentType);
+    res.json(await register.metrics());
+  } catch (ex) {
+    res.status(500).end(ex)
+  }
 });
 
 app.get('/api', async (req, res) => {
