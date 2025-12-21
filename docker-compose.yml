@@ -151,15 +151,17 @@ services:
       retries: 5
 
 volumes:
-  rabbitmq-data:
-    driver: local
   prometheus-data:
     driver: local
   grafana-data:
     driver: local
+  loki-data:
+    driver: local
   postgres-data:
     driver: local
   redis-data:
+    driver: local
+  rabbitmq-data:
     driver: local
 
 # Custom "simple" network
