@@ -135,6 +135,8 @@ services:
   promtail:
     container_name: promtail
     image: grafana/promtail:latest
+    ports:
+      - "9080:9080"
     volumes:
       - ./observability/promtail/promtail-config.yaml:/etc/promtail/config.yaml
       - /var/run/docker.sock:/var/run/docker.sock:ro
