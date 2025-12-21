@@ -1,3 +1,5 @@
+name: example-project
+
 services:
   proxy:
     image: nginx:alpine
@@ -15,6 +17,11 @@ services:
     restart: unless-stopped
     networks:
       - basic-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   backend:
     build:
@@ -41,6 +48,11 @@ services:
     restart: unless-stopped
     networks:
       - basic-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   database:
     image: postgres:15-alpine
@@ -61,6 +73,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   cache:
     image: redis:7-alpine
@@ -78,18 +95,42 @@ services:
       interval: 10s
       timeout: 3s
       retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  loki-init:
+    image: alpine:latest
+    container_name: loki-init
+    user: root # <-- this runs as root strictly to fix permissions
+    command: chown -R 10001:10001 /tmp/loki
+    volumes:
+      - loki-data:/tmp/loki
+    networks:
+      - basic-network
 
   loki:
     container_name: loki
     image: grafana/loki:latest
     restart: unless-stopped
-    volumes:
-      - ./observability/loki/loki-config.yaml:/etc/loki/local-config.yaml
-    command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100:3100"
+    volumes:
+      - ./observability/loki/loki-config.yaml:/etc/loki/local-config.yaml
+      - loki-data:/tmp/loki
+    command: -config.file=/etc/loki/local-config.yaml
     networks:
       - basic-network
+    depends_on:
+      loki-init:
+        condition: service_completed_successfully
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   promtail:
     container_name: promtail
@@ -98,6 +139,7 @@ services:
       - ./observability/promtail/promtail-config.yaml:/etc/promtail/config.yaml
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log/
     command: -config.file=/etc/promtail/config.yaml
     restart: unless-stopped
     networks:
@@ -107,7 +149,7 @@ services:
     container_name: grafana
     image: grafana/grafana:latest
     ports:
-      - "3000:3000"
+      - "3001:3000"
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=password
@@ -115,6 +157,11 @@ services:
       - grafana-data:/var/lib/grafana
     networks:
       - basic-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   prometheus:
     image: prom/prometheus:latest
@@ -127,6 +174,11 @@ services:
     restart: unless-stopped
     networks:
       - basic-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   rabbitmq:
     container_name: rabbitmq
@@ -149,6 +201,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   prometheus-data:
