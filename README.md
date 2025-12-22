@@ -109,9 +109,6 @@ This mounts your source files and uses tsx watch.
 Things that could be added:
 
 - Read replica database
-- Message queue (Kafka, RabbitMQ, or Dragonfly)
-- Monitoring (Prometheus + Grafana)
-- Centralized logging (Loki)
 - Container monitoring (Watchtower)
 - Alerting (PagerDuty, Slack)
 
