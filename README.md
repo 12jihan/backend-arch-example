@@ -53,7 +53,7 @@ curl http://localhost/api
 | `/api` | Returns hostname (useful for seeing load balancing) |
 | `/api/db` | Shows database connection info |
 | `/api/cache` | Shows Redis connection info |
-| `/metrics` | Shows Redis connection info |
+| `/metrics` | Shows Prometheus metrics info |
 
 ## Configuration
 
