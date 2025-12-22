@@ -135,6 +135,8 @@ Nginx automatically load balances across all replicas.
 - **TypeScript** 5.9.3
 
 ## Frontend (Angular)
+- Still need to create the Dockerfile for this so it is not containerized and is completely local
+- I will eventually create a frontend that connects directly to the databases
 
 ### Stack
 
